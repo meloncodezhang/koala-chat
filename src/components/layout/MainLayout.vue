@@ -47,10 +47,21 @@ import Menu from "./Menu.vue";
     // 知识点:未掌握
     box-sizing: border-box;
     min-width: 0;
+    height: 100vh;
+    width:100vw;
+    overflow: hidden;
+    background: #fff;
 }
 
 .el-aside {
     width: 65px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    user-select: none;
+    // 增加阴影
+    box-shadow: 2px 0 8px 0 #CFD3DC;
 }
 
 </style>
