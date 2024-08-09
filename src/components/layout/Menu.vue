@@ -4,10 +4,8 @@
         <header class="menu-header">
             <el-popover
                 placement="right"
-                title="Title"
-                :width="200"
+                :width="400"
                 trigger="hover"
-                content="this is content, this is content, this is content"
             >
                 <template #reference>
                     <el-image
@@ -18,7 +16,17 @@
                 </template>
 
                 <!-- 悬停时显示的内容 -->
-                <div>我是张三</div>
+                <div class="card">
+                    <div class="header">
+                        <div class="img-div">
+                            <img class = "circle-img" src="https://avatars.githubusercontent.com/u/30114549?v=4&size=64">
+                        </div>
+                        <div class="name-div"><span>meloncodezhang</span></div>
+                    </div>
+                    <div class="main">
+                        <span>希望你的眼睛一直笑 想要的都能得到</span>
+                    </div>
+                </div>
             </el-popover>
             <span class="online-status online">
                 在线
@@ -32,6 +40,7 @@
                 @click="onClickMenu(nav)"
                 :class="{
                     'menu-items':true,
+                    'active':isActive(nav)
                 }"
             >
             
@@ -42,6 +51,8 @@
                 <el-icon>
                       <component 
                         :is="nav.icon"
+                        :color="isActive(nav) ? '#1890ff':'#0A0A0A'"
+
                     >
                     </component>
                 </el-icon>
@@ -53,10 +64,12 @@
         </main>
 
         <footer class="menu-footer">
-            <div class="quite" @click="quitSys">
+            <div class="quit" @click="quitSys">
+                <el-icon>
+                    <SwitchButton/>
+                </el-icon>
                 <span>退出</span>
             </div>
-            <button @click="changeCount">测试红点</button>
         </footer>
 
     </section>
@@ -66,7 +79,7 @@
 
 <script setup>
 import { reactive, markRaw, computed, ref } from "vue";
-import { ChatLineRound,UserFilled,Tools } from '@element-plus/icons-vue'
+import { ChatLineRound,UserFilled,Tools,SwitchButton } from '@element-plus/icons-vue'
 
 const unReadCount = ref(0);
 const isFriendApply = ref(true);
@@ -96,9 +109,6 @@ const menus = reactive([
         title:'设置',
     }])
 
-const isActive = (menu) => {
-    return true
-}
 
 const changeCount = () => {
     unReadCount.value += 1
@@ -108,11 +118,28 @@ const changeCount = () => {
     }
 }
 
+// ================== 点击菜单 ==================
+const onClickMenu = (menu)=> {
+    console.log("点击菜单:", menu.title);
+    activMenu.value = menu.title
+
+}
+
+const activMenu = ref("")
+
+// 菜单是否被选中,激活动态绑定类
+const isActive = (menu)=> {
+    return activMenu.value == menu.title
+}
+
+
+// 退出系统
 const quitSys = () => {
     unReadCount.value = 1;
     isFriendApply.value = false;
     isGroupApply.value = false;
 }
+
 
 </script>
 
@@ -149,6 +176,7 @@ const quitSys = () => {
         .online {
             color: #65c468;
         }
+        // el-popover必须设置全局属性修改样式,不能再scope中修改
 
     }
     .menu-main {
@@ -162,17 +190,25 @@ const quitSys = () => {
     .menu-footer {
         height: 90px;
         width: 100%;
-        div{
+        .quit{
             height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             cursor: pointer;
+            :deep .el-icon {
+                font-size: 25px;
+            }
+            span {
+                display: inline-block;
+                font-weight: 500;
+                font-size:12px;
+
+            }
+            
         }
-        span {
-            display: inline-block;
-            font-weight: 500;
-        }
+        
        
     }
 }
@@ -251,6 +287,88 @@ const quitSys = () => {
   100% {
     background: #ff1e1e;
   }
+}
+
+</style>
+
+
+<style lang="scss">
+
+.el-popover {
+    /* !important 表示覆盖原有样式 */
+    top:20px !important;
+    left:70px !important;
+    padding: 0 !important;
+    .card {
+        // background-color: #66b1ff;
+        background-image: url("/src/assets/img/moon.jpg");
+        background-size:cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 300px;;
+        .header {
+            height: 250px;
+            width: 100%;
+            // background-color: antiquewhite;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .img-div {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                // (250px -20px - 80px)/2
+                margin-top: 65px;
+                margin-left: calc((calc(100% - 80px) / 2));
+                .circle-img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    width: auto;
+                    height: auto;
+                    border-radius: 50%;
+                }
+            }
+            .name-div {
+                height: 20px;
+                margin-bottom: 80px;
+                span {
+                    height: 20px;
+                    display: flex;
+                    justify-content: center;
+                    line-height: 20px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    color: black;
+                }
+            }
+
+        }
+        .main{
+            flex:auto;
+            background-color: #eceff1;
+            opacity:0.2;
+            width: 100%;
+            height: 50px;
+            span {
+                height: 50px;
+                display: flex;
+                justify-content: center;
+                line-height: 50px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                color: #000000;
+            }
+        }
+    }
 }
 
 </style>
