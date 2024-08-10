@@ -296,8 +296,8 @@ const quitSys = () => {
 
 .el-popover {
     /* !important 表示覆盖原有样式 */
-    top:20px !important;
-    left:70px !important;
+    // top:10px !important;
+    // left:70px !important;
     padding: 0 !important;
     .card {
         // background-color: #66b1ff;
@@ -347,6 +347,7 @@ const quitSys = () => {
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     color: black;
+                    user-select: none;
                 }
             }
 
@@ -366,6 +367,7 @@ const quitSys = () => {
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 color: #000000;
+                user-select: none;
             }
         }
     }

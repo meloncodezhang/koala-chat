@@ -1,14 +1,25 @@
 import { createRouter,createWebHistory} from 'vue-router';
 import MainLayout from '../components/layout/MainLayout.vue';
+import Message from '../components/views/message/Index.vue'
 const routes = [
         {
             path: "/index",
             component: MainLayout,
             redirect:"/",
+            meta:{},
         },
         {
             path: "/",
             component: MainLayout,
+            redirect: "/message",
+            name:"home",
+            children:[
+                {
+                    path:"/message",
+                    name:"message",
+                    component:Message,
+                }
+            ],
         }
 ]
 

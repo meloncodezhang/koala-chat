@@ -7,7 +7,6 @@
                 <Menu />
             </aside>
             <main class="el-main">
-                这是右边部分
                 <router-view />
             </main>
         </section>
@@ -62,6 +61,11 @@ import Menu from "./Menu.vue";
     user-select: none;
     // 增加阴影
     box-shadow: 2px 0 8px 0 #CFD3DC;
+}
+
+.el-main {
+    padding: 0px;
+    margin: 0px;
 }
 
 </style>
