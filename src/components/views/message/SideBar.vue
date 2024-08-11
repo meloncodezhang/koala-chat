@@ -14,7 +14,7 @@
         
         </header>
 
-        <!-- 显示置顶列表 -->
+        <!-- 头部内容-置顶列表 -->
         <header class="el-header header-top">
             <!-- 每个置顶元素绑定Popover气泡卡片 -->
             <el-popover
@@ -60,12 +60,22 @@
 
         </header>
 
-        <header class="el-header header-badge">
-            <!-- <div>头部内容-未读区域</div> -->
+        <!-- 头部内容-未读区域 -->
+        <header 
+            class="el-header header-badge"
+            v-show="talkItems.length > 0"
+        >
+            <!-- 会话记录总条数 -->
+            <p>会话记录({{talkItems.length}})</p>
+            <p>
+                <span class="badge unread" v-show="unreadNum">{{unreadNum}}条未读</span>
+            </p>
+            
         </header>
 
-        <main class="el-main">
-            <!-- <div>会话列表</div> -->
+        <main class="el-main me-scrollbar me-scrollbar-thumb" id="talk-session-list">
+            <!-- 根据会话列表加载状态,展示不同的内容 -->
+            <template v-if="loadStatus==2"><Skeleton /></template>
         </main>
     </section>
   
@@ -74,6 +84,7 @@
 <script setup>
 import { Search,Tools,Plus} from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
+import Skeleton from './Skeleton.vue'
 const inputValue = ref("")
 const topItems = reactive([
     {
@@ -120,6 +131,19 @@ const activeTab = ref("")
 const isActive = (item) => {
     return activeTab.value == item.name
 }
+
+// 未读消息列表
+const talkItems = reactive([
+    {"message":"hello","id":"1"},{"message":"hi","id":"2"}
+])
+// 未读消息数量
+const unreadNum = ref(1023)
+
+// 会话列表加载状态 loadStatus:1-未加载,2-加载中,3-加载完成,4-加载失败
+const loadStatus = ref(2)
+
+
+
 </script>
 
 <style scoped lang="scss">
@@ -127,10 +151,13 @@ const isActive = (item) => {
 .el-container {
     display: flex;
     flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .el-header {
     padding: 0px;
+
 }
 .header-tools {
     flex-shrink: 0;
@@ -213,7 +240,30 @@ const isActive = (item) => {
             color: green;
         }
     }
+    // 元素的高度由子元素确定
+    height: auto;
 }
+
+.header-badge {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+    .unread {
+        font-size: 11px;
+        background-color: #ff4d4f;
+        color: white;
+        cursor: pointer;
+        padding:4px;
+    }
+    // &.shadow {
+    //     box-shadow: 0 2px 6px 0 rgb(31 35 41 / 5%);
+    // }
+}
+
+
 .el-main {
     padding: 0px;
     margin: 0px;
@@ -230,8 +280,40 @@ const isActive = (item) => {
             line-height: 35px;
             text-align: center;
             width: 100%;
+            font-size: 12px;
         }
 
     }
+
+// session-list设置滚动条样式
+// 滚动条样式
+.me-scrollbar {
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: transparent;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar {
+      background-color: var(--im-scrollbar);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--im-scrollbar-thumb);
+    }
+  }
+
+  &.me-scrollbar-thumb {
+    &::-webkit-scrollbar {
+      background-color: unset;
+    }
+  }
+}
 
 </style>
