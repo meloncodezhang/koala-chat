@@ -1,6 +1,6 @@
 <template>
 
-    <div class="skeleton flex-center" v-for="i in 30" :key="i">
+    <div class="skeleton flex-center" v-for="i in 15" :key="i">
         <div class="avatar">
             <el-skeleton style="--el-skeleton-circle-size: 35px">
                 <template #template>

@@ -10,7 +10,7 @@
             >
             </el-input>
 
-             <el-button :icon="Plus" circle />
+            <el-button :icon="Plus" circle @click="creatGroup" />
         
         </header>
 
@@ -78,6 +78,14 @@
             <template v-if="loadStatus==2"><Skeleton /></template>
         </main>
     </section>
+
+    <div class="el-dialog-div">
+        <el-dialog v-model="isCreateGroup" >
+            <CreateGroupDialog />
+        </el-dialog>
+    </div>
+   
+    
   
 </template>
 
@@ -85,6 +93,8 @@
 import { Search,Tools,Plus} from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import Skeleton from './Skeleton.vue'
+import CreateGroupDialog from '../group/CreateGroupDialog.vue'
+const isCreateGroup = ref(false)
 const inputValue = ref("")
 const topItems = reactive([
     {
@@ -142,6 +152,10 @@ const unreadNum = ref(1023)
 // 会话列表加载状态 loadStatus:1-未加载,2-加载中,3-加载完成,4-加载失败
 const loadStatus = ref(2)
 
+// 创建群聊
+const creatGroup = ()=>{
+    isCreateGroup.value = true;
+}
 
 
 </script>
@@ -153,7 +167,18 @@ const loadStatus = ref(2)
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
+    // el-dialog外层必须包裹一个div,否则无法穿透修改样式
+    .el-dialog-div {
+        :deep .el-dialog {
+            padding: 0px;
+            .el-dialog__header {
+                padding-bottom: 0px;
+            }
+        }
+    }
+    
 }
+
 
 .el-header {
     padding: 0px;
