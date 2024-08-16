@@ -66,7 +66,16 @@
                     <span>邀请成员数量({{groupMemCount}})</span>
                 </div>
 
-                <main class="count-main">
+                <main class="grid-main">
+
+                    <div class="grid-wrapper">
+                       
+                        <div v-for="fd in checkedFridend" class="info">
+                            <el-image :src="fd.userImgUrl"></el-image>
+                            <span class="name">{{fd.userName}}</span>
+                        </div>
+
+                    </div>
 
                 </main>
 
@@ -84,7 +93,7 @@
 
 <script setup >
 import { reactive,ref } from "vue";
-import { Search } from '@element-plus/icons-vue'
+import { Search,Delete } from '@element-plus/icons-vue'
 
 const checkedFridend = ref([])
 const fridends = reactive([
@@ -225,11 +234,6 @@ const groupMemCount = ref(0)
                             display: flex;
                             justify-content: flex-start;
                             width: 280px;
-                            .avatar {
-                                height: 30px;
-                                width: 30px;
-                                border-radius: 30px;
-                            }
                             .name {
                                 font-size: 13px;
                                 line-height: 30px;
@@ -267,6 +271,37 @@ const groupMemCount = ref(0)
                 margin-top: 20px;
                 font-size: 16px;
 
+            }
+            .grid-main {
+                .grid-wrapper {
+                    display: grid;
+                    padding: 10px;
+                    grid-template-columns: repeat(auto-fill, 60px);
+                    justify-content: space-between;
+                    .info {
+                        width: 60px;
+                        height: 60px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-around;
+                        align-items: center;
+                        :deep .el-image {
+                            width: 40px;
+                            height:40px;
+                        }
+                        .name {
+                            color:red;
+                            font-size: 10px;
+                            text-align: center;
+                            justify-self: center;
+                            width: 40px;
+                            height: 12px;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            
+                        }
+                    }
+                }
             }
         }
         
@@ -330,5 +365,11 @@ const groupMemCount = ref(0)
     }
   }
 }
-    
+
+.avatar {
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+}
+
 </style>
