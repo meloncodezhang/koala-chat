@@ -1,102 +1,132 @@
 <template>
 
-    <section class="el-container">
+    <el-dialog
+        v-model="isCreateGroup"
+        @close="closeGroupDialog"
+    >
 
-        <header class="el-header">
-            <span>创建群聊</span>
-        </header>
-        <main class="el-main">
+        <section class="el-container">
 
-            <aside class="el-aside-left">
-                <header class="search-part">
-                    <el-input 
-                        :prefix-icon="Search"
-                        placeholder="搜索"
-                    ></el-input>
-                </header>
+            <header class="el-header">
+                <span>创建群聊</span>
+            </header>
 
-                <main class="radio-part">
-                    <div class="el-checkbox-wrapper me-scrollbar me-scrollbar-thumb">
-                        <el-checkbox-group
-                            @change="handleCheckBoxChange"
-                            class="checkbox-group"
-                            v-model="checkedFridend"
-                        >
+            <main class="el-main">
+                <aside class="el-aside-left">
 
-                            <el-checkbox
-                                v-for="fd in fridends"
-                                :label="fd.userName"
-                                :key="fd.userId"
-                                :value="fd"
-                                class="el-checkbox-item"
-                            >
-                                <div class="wrapper">
-                                    <el-image class="avatar" :src="fd.userImgUrl"></el-image>
+                    <header class="search-part">
+                        <el-input 
+                            :prefix-icon="Search"
+                            placeholder="  输入用户名进行搜索"
+                            v-model="friendName"
+                            maxlength="20"
+                        ></el-input>
+                    </header>
+
+                    <main class="results-part">
+
+                        <header class="results-part-header">
+
+                            <span>最近联系人</span>
+                            <!-- <button>最近联系人</button> -->
+
+                        </header>
+
+                        <main class="results-part-main">
+                            <div class="el-checkbox-wrapper me-scrollbar me-scrollbar-thumb">
+                                <el-checkbox-group
+                                    @change="handleCheckBoxChange"
+                                    class="checkbox-group"
+                                    v-model="checkedFridendList"
+                                >
+        
+                                    <el-checkbox
+                                        v-for="fd in friendsList"
+                                        :label="fd.userName"
+                                        :key="fd.userId"
+                                        :value="fd"
+                                        class="el-checkbox-item"
+                                    >
+                                        <div class="wrapper">
+                                            <el-image class="avatar" :src="fd.userImgUrl"></el-image>
+                                            <span class="name">{{fd.userName}}</span>
+
+                                        </div>
+                                    </el-checkbox>
+        
+                                </el-checkbox-group>
+                            </div>
+                        </main>
+
+                        
+                    </main>
+
+                </aside>
+                <main class="el-main-right">
+                    
+                    <header class="el-main-right-header">
+
+                        <el-form :model="form">
+                            <el-form-item label="群聊名称">
+                                <span style="color: red;">*</span>
+                                <el-input 
+                                    v-model="form.groupName"
+                                    show-word-limit
+                                    maxlength="30"
+                                    type="text"
+                                >
+                                </el-input>
+                            </el-form-item>
+                        </el-form>
+    
+    
+                    </header>
+
+                    <main class="el-main-right-main"> 
+                        <div class="span-div">
+                            <span>已添加 {{groupMemCount}} 人</span>
+                        </div>
+                        <el-button type="danger" :icon="Delete" text @click="clearCheckedBox">全部清空</el-button>
+                    </main>
+
+                    <footer class="el-main-right-footer">
+
+                            <div class="grid-wrapper">
+                               
+                                <div v-for="fd in checkedFridendList" class="info">
+                                    <el-image :src="fd.userImgUrl"></el-image>
                                     <span class="name">{{fd.userName}}</span>
                                 </div>
-                            </el-checkbox>
+        
+                            </div>
+        
+                    </footer>
 
-                        </el-checkbox-group>
-                    </div>
-                    
-                </main>
-            </aside>
-            
-            <main class="el-main-right">
-
-                <header class="name-header">
-
-                    <el-form :model="form">
-                        <el-form-item label="群聊名称">
-                            <span style="color: red;">*</span>
-                            <el-input 
-                                v-model="form.groupName"
-                                show-word-limit
-                                maxlength="20"
-                                type="text"
-                            >
-                            </el-input>
-                        </el-form-item>
-                    </el-form>
-
-
-                </header>
-
-                <div class="count">
-                    <span>邀请成员数量({{groupMemCount}})</span>
-                </div>
-
-                <main class="grid-main">
-
-                    <div class="grid-wrapper">
-                       
-                        <div v-for="fd in checkedFridend" class="info">
-                            <el-image :src="fd.userImgUrl"></el-image>
-                            <span class="name">{{fd.userName}}</span>
-                        </div>
-
-                    </div>
 
                 </main>
-
             </main>
 
+            <footer class="el-footer">
+                <el-button type="defult" size="small" @click="cancle">取消</el-button>
+                <el-button type="primary" size="small">确认</el-button>
+            </footer>
 
-        </main>
-        <footer class="el-footer">
-            <el-button type="defult" size="small">取消</el-button>
-            <el-button type="primary" size="small">确认</el-button>
-        </footer>
-    </section>
+        </section>
+
+
+    </el-dialog>
+
     
 </template>
 
 <script setup >
-import { reactive,ref } from "vue";
+import { reactive, ref } from 'vue'
 import { Search,Delete } from '@element-plus/icons-vue'
 
-const checkedFridend = ref([])
-const fridends = reactive([
+
+const isCreateGroup = ref(true)
+const checkedFridendList = ref([])
+const friendsList = reactive([
                 {
                     userId : "6481596",
                     userName : "三咲智子",
@@ -174,128 +204,175 @@ const fridends = reactive([
                     isShow:true
                 }
 ])
-const handleCheckBoxChange = (value)=> {
-    console.log("选中的是:",value);
-    groupMemCount.value = checkedFridend.value.length
+
+const closeGroupDialog = ()=> {
+    // 点击x和点击空白地方都会关闭dialog对话框
+    console.log("关闭对话框");
 }
-const groupName = ref("")
+
 const form = reactive({
     "groupName":""
 })
+
 const groupMemCount = ref(0)
+
+
+const handleCheckBoxChange = (value)=> {
+    console.log("选中的是:",value);
+    groupMemCount.value = checkedFridendList.value.length
+}
+
+const clearCheckedBox = ()=> {
+    // 清空左边checkbox的选择状态标志
+    // 清空checkedFridendList列表
+    console.log("清空checkedFridendList");
+    checkedFridendList.value = []
+    groupMemCount.value = checkedFridendList.value.length
+}
+
+const friendName = ref("")
 
 </script>
 
 <style lang="scss" scoped>
 
 .el-container {
-    height: 550px;
+    height: 850px;
     display: flex;
+    flex-direction: column;
     .el-header {
-        height: 60px;
-        // background-color: aqua;
-        border-bottom: 1px solid gainsboro;
+        height: 30px;
         span {
             display: inline-block;
-            // (48px - 16px)/2
-            margin-top: 16px;
             font-size:15px;
-            font-weight: 500;
             color: black;
         }
+        padding: 0px;
     }
     .el-main {
-        background-color: beige;
-        padding: 0;
-        margin: 0;
         display: flex;
         width: 100%;
-        .el-aside-left {
-            width: 360px;
-            height: 100%;
+        padding: 10px;
+        .checkbox-group {
+            margin-left: 10px;
+            margin-top: 10px;
+            height: 70%;
+        }
+        .el-aside-left{
+            width: 460px;
+            // 增加右边框颜色和线条
+            border-right:1px solid  #dedfe0;
             .search-part {
                 height: 30px;
                 margin-top: 10px;
                 margin-bottom: 5px;
-                padding: 5px 16px;
+                padding: 5px 10px;
             }
-            .radio-part {
-                height: calc(100% - 30px);
-                .el-checkbox-wrapper {
-                    // 不能用100%,必须用确定的高度,否则滚动条出现在外边
-                    height:410px;
-                    // 内容超过height,则自动出现滚动条
-                    overflow: auto;
-                    .el-checkbox-item {
-                        margin-top: 20px;
-                        display: flex;
-                        // justify-content: flex-end;
-                        .wrapper {
-                            display: flex;
-                            justify-content: flex-start;
-                            width: 280px;
-                            .name {
-                                font-size: 13px;
-                                line-height: 30px;
-                                margin-left: 15px;
-                            }
-
-                        }
+            .results-part {
+                height: 700px;
+                .results-part-header {
+                    height: 20px;
+                    span {
+                        display: inline-block;
+                        margin-left: 10px;
+                        margin-top: 10px;
                     }
                 }
+
+                .results-part-main {
+                    height: 660px;
+                    .el-checkbox-wrapper {
+                        margin-top: 20px;
+                        height:calc( 100% - 40px );
+                        // 内容超过height,则自动出现滚动条
+                        overflow: auto;
+                        .el-checkbox-item {
+                            margin-top: 20px;
+                            display: flex;
+                            // justify-content: flex-end;
+                            .wrapper {
+                                display: flex;
+                                justify-content: flex-start;
+                                width: 300px;
+                                .name {
+                                    font-size: 13px;
+                                    line-height: 30px;
+                                    margin-left: 15px;
+                                }
+    
+                            }
+                        }
+                    }
+
+                }
             }
-            // 增加右边框
-            border-right: 1px solid gainsboro;
+
         }
         .el-main-right {
-            width: calc(100% - 360px);
-            
-            .name-header {
+            width: calc(100% - 460px);
+            .el-main-right-header {
                 height: 30px;
                 margin-top: 10px;
                 margin-bottom: 5px;
-                padding: 5px 16px;
+                padding: 5px 15px;
                 :deep .el-form-item__content {
                     flex-direction: row;
                     align-items: center;
                     justify-content: center;
                     flex-wrap: unset;
                 }
+                :deep .el-form-item__label {
+                    padding: 0px;
+                }
                 span{
                     margin-right: 5px;
                 }
-                
             }
-            .count {
-                margin-left: 16px;
-                margin-top: 20px;
-                font-size: 16px;
+            .el-main-right-main {
+                display: flex;
+                height: 35px;
+                justify-content:space-between ;
+                .span-div {
+                   text-align: center;
+                   line-height: 35px;
+                    margin-left: 15px;
+                    span {
+                        display: inline-block;
+                        font-size: 13px;
 
+                    }
+                    :deep .el-button {
+                        height: 35px;
+                    }
+                }
+
+                border-bottom:1px solid  #dedfe0;
             }
-            .grid-main {
+            .el-main-right-footer {
                 .grid-wrapper {
                     display: grid;
                     padding: 10px;
-                    grid-template-columns: repeat(auto-fill, 60px);
+                    grid-template-columns: repeat(auto-fill, 80px);
                     justify-content: space-between;
                     .info {
-                        width: 60px;
-                        height: 60px;
+                        width: 80px;
+                        height: 80px;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-around;
                         align-items: center;
+                        margin-top: 10px;
                         :deep .el-image {
-                            width: 40px;
-                            height:40px;
+                            width: 60px;
+                            height:60px;
                         }
                         .name {
-                            color:red;
-                            font-size: 10px;
+                            color:black;
+                            font-size: 12px;
                             text-align: center;
                             justify-self: center;
-                            width: 40px;
-                            height: 12px;
+                            width: 60px;
+                            height: 15px;
                             overflow: hidden;
                             text-overflow: ellipsis;
                             
@@ -304,7 +381,6 @@ const groupMemCount = ref(0)
                 }
             }
         }
-        
     }
     .el-footer {
         height: 50px;
@@ -313,57 +389,6 @@ const groupMemCount = ref(0)
         justify-content: flex-end;
         border-top: 1px solid gainsboro;
     }
-    .radio-part {
-        // 样式调整 label和复选框调换位置
-        :deep .el-checkbox__input {
-            order:2
-        }
-        :deep .el-checkbox__label {
-            order: 1;
-            margin-right: 10px;
-        }
-        :deep .el-checkbox {
-            display: flex;
-        }
-        .checkbox-group {
-            margin-left: 20px;
-            margin-top: 10px;
-            height: 70%;
-        }
-        :deep .el-checkbox:last-of-type {
-            margin-right: 0px;
-        }
-    }
-
-}
-
-.me-scrollbar {
-  &::-webkit-scrollbar {
-    width: 3px;
-    height: 3px;
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: transparent;
-  }
-
-  &:hover {
-    &::-webkit-scrollbar {
-      background-color: var(--im-scrollbar);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--im-scrollbar-thumb);
-    }
-  }
-
-  &.me-scrollbar-thumb {
-    &::-webkit-scrollbar {
-      background-color: unset;
-    }
-  }
 }
 
 .avatar {
@@ -371,5 +396,35 @@ const groupMemCount = ref(0)
     width: 30px;
     border-radius: 30px;
 }
+
+.me-scrollbar {
+    &::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+      background-color: transparent;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: transparent;
+    }
+  
+    &:hover {
+      &::-webkit-scrollbar {
+        background-color: var(--im-scrollbar);
+      }
+  
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--im-scrollbar-thumb);
+      }
+    }
+  
+    &.me-scrollbar-thumb {
+      &::-webkit-scrollbar {
+        background-color: unset;
+      }
+    }
+  }
+
 
 </style>

@@ -79,11 +79,7 @@
         </main>
     </section>
 
-    <div class="el-dialog-div">
-        <el-dialog v-model="isCreateGroup" >
-            <CreateGroupDialog />
-        </el-dialog>
-    </div>
+    <CreateGroupDialog v-if="isCreateGroup" @close="isCreateGroup=false" />
    
     
   
